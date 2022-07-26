@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    https://www.springframework.org/schema/beans/spring-beans.xsd        
+    http://camel.apache.org/schema/spring       
+    https://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+	<camelContext id="camel"
+		xmlns="http://camel.apache.org/schema/spring">
+
+
+
+
+		<route id="_route1">
+			<from uri="timer://foo?repeatCount=1" />
+
+			<setBody>
+				<simple>AAAAAAA</simple>
+			</setBody>
+
+			<to id="route-to-incoming-orders" uri="{{amqp.queue.name}}" />
+
+			<log message="Pushed message to Queue naming {{amqp.queue.name}}" />
+		</route>
+
+
+	</camelContext>
+
+
+
+
+	<!-- DECLARING CONNECTION FACTORY FOR AMQ -->
+	<bean class="org.apache.qpid.jms.JmsConnectionFactory"
+		id="jmsConnectionFactory">
+		<property name="username" value="${amqp.username}" />
+		<property name="password" value="${amqp.password}" />
+		<property name="remoteURI" value="${amqp.url}" />
+	</bean>
+	<bean class="org.apache.camel.component.sjms2.Sjms2Component"
+		id="amqp">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+
+
+
+
+
+
+</beans>
