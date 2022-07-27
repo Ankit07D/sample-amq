@@ -11,8 +11,6 @@
 		xmlns="http://camel.apache.org/schema/spring">
 
 
-
-
 		<route id="_route1">
 			<from uri="timer://foo?repeatCount=1" />
 
